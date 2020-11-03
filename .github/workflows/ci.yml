@@ -8,10 +8,7 @@ on:
 jobs:
 #  build:
 #    runs-on: ubuntu-latest
-#
-#    strategy:
-#      max-parallel: 1
-#
+
 #    steps:
 #      - uses: actions/checkout@v1
 #
@@ -46,15 +43,26 @@ jobs:
 
 
   scan:
-#    needs: [build]
+    needs: [build]
     runs-on: ubuntu-latest
-
-    strategy:
-      max-parallel: 1
 
     container:
       image: owasp/zap2docker-stable
       options: --user root -v ${{ github.workspace }}:/zap/wrk/:rw
+
+    steps:
+    - name: run zap baseline scan
+      run: zap-baseline.py -t https://faraday-vmpipelines.herokuapp.com -x zap-report.xml || echo 0
+
+    - name: Upload Zap Report Artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: zap-report
+        path: zap-report.xml
+
+  upload:
+    needs: [scan]
+    runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v1
@@ -67,25 +75,18 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
+
     - name: Get current date
       id: date
       run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
 
-    - name: run zap baseline scan
-      run: zap-baseline.py -t https://faraday-vmpipelines.herokuapp.com -x zap-report.xml || echo 0
 
-    - name: Check dirs
-      run: pwd && ls -al
-
-    - name: Check dirs (2)
-      run: ls /zap/wrk
-
-    - name: Upload Zap Report Artifact
-      uses: actions/upload-artifact@v2
+    - name: Download Zap Report Artifact
+      uses: actions/download-artifact@master
       with:
         name: zap-report
         path: zap-report.xml
 
-#    - name: Upload ZAP Report to Faraday
-#      run: |
-#        python $GITHUB_WORKSPACE/import_scan.py -b ${{ secrets.FARADAY_HOST }} -e ${{ secrets.FARADAY_EMAIL }} -p ${{ secrets.FARADAY_PASSWORD }} -w ${{ github.event.repository.name }}-${{ steps.date.outputs.date }} -f zap-report.xml
+    - name: Upload ZAP Report to Faraday
+      run: |
+        python $GITHUB_WORKSPACE/import_scan.py -b ${{ secrets.FARADAY_HOST }} -e ${{ secrets.FARADAY_EMAIL }} -p ${{ secrets.FARADAY_PASSWORD }} -w ${{ github.event.repository.name }}-${{ steps.date.outputs.date }} -f zap-report.xml
