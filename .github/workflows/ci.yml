@@ -22,8 +22,8 @@ jobs:
         pip install -r requirements.txt
     - name: Run Bandit (Ptyhon code checker)
       run: |
-        mkdir -p output/bandit
-        bandit -r . -f html -o output/bandit/bandit-report.html
+        mkdir -p dist
+        bandit -q -r . -f html -o dist/bandit-report.html
     - name: Upload Bandit Report
       uses: actions/upload-artifact@v2
       with:
