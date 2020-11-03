@@ -22,10 +22,10 @@ jobs:
 #        pip install -r requirements.txt
     - name: Creating dist folder
       run: |
-        mkdir -p dist/zap
-        mkdir -p dist/bandit
-#    - name: Run Bandit (Ptyhon code checker)
-#      run: bandit -r . -f html -o dist/bandit/bandit-report.html || true
+        mkdir -p $GITHUB_WORKSPACE/dist/zap
+        mkdir -p $GITHUB_WORKSPACE/dist/bandit
+#    - name: Run Bandit (Python code checker)
+#      run: bandit -r . -f html -o $GITHUB_WORKSPACE/dist/bandit/bandit-report.html || true
 #    - name: Add remote origin
 #      run: |
 #        git remote add heroku https://heroku:${{ secrets.HEROKU_API_KEY }}@git.heroku.com/${{ secrets.HEROKU_APP_NAME }}.git
@@ -38,9 +38,9 @@ jobs:
 #      uses: actions/upload-artifact@v2
 #      with:
 #        name: bandit-report
-#        path: dist/bandit/bandit-report.html
+#        path: $GITHUB_WORKSPACE/dist/bandit/bandit-report.html
     - name: Upload ZAP Report
       uses: actions/upload-artifact@v2
       with:
         name: zap-report
-        path: dist/zap/zap-report.xml
+        path: $GITHUB_WORKSPACE/dist/zap/zap-report.xml
