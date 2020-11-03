@@ -40,7 +40,7 @@ jobs:
         name: bandit-report
         path: dist/bandit/bandit-report.html
     - name: Upload ZAP Report
-        uses: actions/upload-artifact@v2
-        with:
-          name: zap-report
-          path: dist/zap/zap-report-xml
+      uses: actions/upload-artifact@v2
+      with:
+        name: zap-report
+        path: dist/zap/zap-report-xml
