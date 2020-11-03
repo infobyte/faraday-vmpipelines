@@ -6,11 +6,11 @@ on:
       - master
 
 jobs:
-  strategy:
-    max-parallel: 1
-
   build:
     runs-on: ubuntu-latest
+
+    strategy:
+      max-parallel: 1
 
     steps:
       - uses: actions/checkout@v1
@@ -49,6 +49,9 @@ jobs:
 
   scan:
     runs-on: ubuntu-latest
+
+    strategy:
+      max-parallel: 1
 
     container:
       image: owasp/zap2docker-stable
