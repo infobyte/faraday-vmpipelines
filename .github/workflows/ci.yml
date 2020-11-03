@@ -89,4 +89,4 @@ jobs:
 
     - name: Upload ZAP Report to Faraday
       run: |
-        python $GITHUB_WORKSPACE/import_scan.py -b ${{ secrets.FARADAY_HOST }} -e ${{ secrets.FARADAY_EMAIL }} -p ${{ secrets.FARADAY_PASSWORD }} -w ${{ github.event.repository.name }}-${{ steps.date.outputs.date }}-${{ github.event.issues.number }} -f zap-report/zap-report.xml
+        python $GITHUB_WORKSPACE/import_scan.py -b ${{ secrets.FARADAY_HOST }} -e ${{ secrets.FARADAY_EMAIL }} -p ${{ secrets.FARADAY_PASSWORD }} -w ${{ github.event.repository.name }}-${{ steps.date.outputs.date }}-${{ github.run_id }} -f zap-report/zap-report.xml
