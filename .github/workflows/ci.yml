@@ -8,9 +8,9 @@ on:
 jobs:
   build-deploy-scan:
     runs-on: ubuntu-latest
-    container:
-      image: owasp/zap2docker-stable
-      options: --user root -v ${{ github.workspace }}:/zap/wrk/:rw
+#    container:
+#      image: owasp/zap2docker-stable
+#      options: --user root -v ${{ github.workspace }}:/zap/wrk/:rw
     steps:
     - name: Get current date
       id: date
@@ -48,8 +48,8 @@ jobs:
         name: bandit-report
         path: $GITHUB_WORKSPACE/dist/bandit-report.html
 
-    - name: run zap baseline scan
-      run: zap-baseline.py -t https://faraday-vmpipelines.herokuapp.com -x zap-report.xml || echo 0
+#    - name: run zap baseline scan
+#      run: zap-baseline.py -t https://faraday-vmpipelines.herokuapp.com -x zap-report.xml || echo 0
 
     - name: Upload ZAP Report to Faraday
       run: |
