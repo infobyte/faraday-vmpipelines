@@ -48,7 +48,7 @@ jobs:
         run: zap-baseline.py -t https://faraday-vmpipelines.herokuapp.com -x zap-report.xml || echo 0
 
       - name: Upload ZAP Report
-          uses: actions/upload-artifact@v2
-          with:
-            name: zap-report
-            path: ${{ github.workspace }}/zap-report.xml
+        uses: actions/upload-artifact@v2
+        with:
+          name: zap-report
+          path: ${{ github.workspace }}/zap-report.xml
