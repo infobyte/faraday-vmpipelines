@@ -34,17 +34,16 @@ def db_init_posts():
 
 
 if __name__ == '__main__':
+    print('Initializing DBs')
 
-    try:
-        os.remove('db_users.sqlite')
-    except FileNotFoundError:
-        pass
+    if not os.path.exists('db_users.sqlite'):
+        print("db_users.sqlite doesn't exists. Initializing users")
+        db_init_users()
 
-    try:
-        os.remove('db_posts.sqlite')
-    except FileNotFoundError:
-        pass
+    if not os.path.exists('db_posts.sqlite'):
+        print("db_posts.sqlite doesn't exists. Initializing posts")
+        db_init_posts()
 
-    db_init_users()
-    db_init_posts()
+    print("DBs has been initialized")
+
 
