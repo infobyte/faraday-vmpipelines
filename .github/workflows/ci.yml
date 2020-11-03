@@ -16,25 +16,25 @@ jobs:
       with:
         python-version: '3.x' # Version range or exact version of a Python version to use, using SemVer's version range syntax
         architecture: 'x64' # optional x64 or x86. Defaults to x64 if not specified
-#    - name: Install dependencies
-#      run: |
-#        python -m pip install --upgrade pip
-#        pip install -r requirements.txt
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
     - name: Creating dist folder
       run: mkdir -p $GITHUB_WORKSPACE/dist
-#    - name: Run Bandit (Python code checker)
-#      run: bandit -r . -f html -o $GITHUB_WORKSPACE/dist/bandit-report.html || true
-#    - name: Add remote origin
-#      run: |
-#        git remote add heroku https://heroku:${{ secrets.HEROKU_API_KEY }}@git.heroku.com/${{ secrets.HEROKU_APP_NAME }}.git
-#    - name: Deploy to Heroku
-#      run: |
-#        git push heroku HEAD:master -f
-#    - name: Upload Bandit Report
-#      uses: actions/upload-artifact@v2
-#      with:
-#        name: bandit-report
-#        path: $GITHUB_WORKSPACE/dist/bandit-report.html
+    - name: Run Bandit (Python code checker)
+      run: bandit -r . -f html -o $GITHUB_WORKSPACE/dist/bandit-report.html || true
+    - name: Add remote origin
+      run: |
+        git remote add heroku https://heroku:${{ secrets.HEROKU_API_KEY }}@git.heroku.com/${{ secrets.HEROKU_APP_NAME }}.git
+    - name: Deploy to Heroku
+      run: |
+        git push heroku HEAD:master -f
+    - name: Upload Bandit Report
+      uses: actions/upload-artifact@v2
+      with:
+        name: bandit-report
+        path: $GITHUB_WORKSPACE/dist/bandit-report.html
 
   scan:
     runs-on: ubuntu-latest
