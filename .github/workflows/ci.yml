@@ -38,9 +38,9 @@ jobs:
 
   scan:
     runs-on: ubuntu-latest
-    container:
-      image: owasp/zap2docker-stable
-      options: --user root -v ${{ github.workspace }}:/zap/wrk/:rw
+#    container:
+#      image: owasp/zap2docker-stable
+#      options: --user root -v ${{ github.workspace }}:/zap/wrk/:rw
     steps:
       - uses: actions/checkout@v1
       - name: Use Python
@@ -51,7 +51,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          pip3 install -r requirements.txt -f
 
       - run: pwd && ls -l
 #      - name: run zap baseline scan
