@@ -23,7 +23,7 @@ jobs:
     - name: Creating dist folder
       run: mkdir -p dist
     - name: Run Bandit (Ptyhon code checker)
-      run: bandit -r . -f html -o dist/bandit-report.html
+      run: bandit -r . -f html -o dist/bandit-report.html || true
     - name: Upload Bandit Report
       uses: actions/upload-artifact@v2
       with:
