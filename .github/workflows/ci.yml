@@ -20,21 +20,21 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
-    - name: Creating dist folder
-      run: mkdir -p $GITHUB_WORKSPACE/dist
-    - name: Run Bandit (Python code checker)
-      run: bandit -r . -f html -o $GITHUB_WORKSPACE/dist/bandit-report.html || true
-    - name: Add remote origin
-      run: |
-        git remote add heroku https://heroku:${{ secrets.HEROKU_API_KEY }}@git.heroku.com/${{ secrets.HEROKU_APP_NAME }}.git
-    - name: Deploy to Heroku
-      run: |
-        git push heroku HEAD:master -f
-    - name: Upload Bandit Report
-      uses: actions/upload-artifact@v2
-      with:
-        name: bandit-report
-        path: $GITHUB_WORKSPACE/dist/bandit-report.html
+#    - name: Creating dist folder
+#      run: mkdir -p $GITHUB_WORKSPACE/dist
+#    - name: Run Bandit (Python code checker)
+#      run: bandit -r . -f html -o $GITHUB_WORKSPACE/dist/bandit-report.html || true
+#    - name: Add remote origin
+#      run: |
+#        git remote add heroku https://heroku:${{ secrets.HEROKU_API_KEY }}@git.heroku.com/${{ secrets.HEROKU_APP_NAME }}.git
+#    - name: Deploy to Heroku
+#      run: |
+#        git push heroku HEAD:master -f
+#    - name: Upload Bandit Report
+#      uses: actions/upload-artifact@v2
+#      with:
+#        name: bandit-report
+#        path: $GITHUB_WORKSPACE/dist/bandit-report.html
 
   scan:
     runs-on: ubuntu-latest
@@ -44,8 +44,8 @@ jobs:
     steps:
       - run: pwd && ls -l
 
-      - name: run zap baseline scan
-        run: zap-baseline.py -t https://faraday-vmpipelines.herokuapp.com -x zap-report.xml || echo 0
+#      - name: run zap baseline scan
+#        run: zap-baseline.py -t https://faraday-vmpipelines.herokuapp.com -x zap-report.xml || echo 0
 
       - name: Upload ZAP Report to Faraday
-        run: python import_scan.py -b ${{ secrets.FARADAY_HOST }} -e ${{ secrets.FARADAY_EMAIL }} -p ${{ secrets.FARADAY_PASSWORD }} -w xlabs5 -f zap-report.xml
+        run: python $GITHUB_WORKSPACE/import_scan.py -b ${{ secrets.FARADAY_HOST }} -e ${{ secrets.FARADAY_EMAIL }} -p ${{ secrets.FARADAY_PASSWORD }} -w xlabs5 -f zap-report.xml
