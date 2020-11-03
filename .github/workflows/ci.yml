@@ -84,7 +84,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: zap-report
-        path: /zap/wrk/zap-report.html
+        path: zap-report.xml
 
 #    - name: Upload ZAP Report to Faraday
 #      run: |
