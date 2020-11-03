@@ -20,10 +20,10 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
+    - name: Creating dist folder
+      run: mkdir -p dist
     - name: Run Bandit (Ptyhon code checker)
-      run: |
-        mkdir -p dist
-        bandit -q -r . -f html -o dist/bandit-report.html
+      run: bandit -q -r . -f html -o dist/bandit-report.html
     - name: Upload Bandit Report
       uses: actions/upload-artifact@v2
       with:
