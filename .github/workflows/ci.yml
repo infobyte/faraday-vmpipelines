@@ -22,10 +22,10 @@ jobs:
 #        pip install -r requirements.txt
     - name: Creating dist folder
       run: |
-        mkdir -p $GITHUB_WORKSPACE/dist/zap
-        mkdir -p $GITHUB_WORKSPACE/dist/bandit
+        mkdir -p /tmp/dist/zap
+        mkdir -p /tmp/dist/bandit
 #    - name: Run Bandit (Python code checker)
-#      run: bandit -r . -f html -o $GITHUB_WORKSPACE/dist/bandit/bandit-report.html || true
+#      run: bandit -r . -f html -o /tmp/dist/bandit/bandit-report.html || true
 #    - name: Add remote origin
 #      run: |
 #        git remote add heroku https://heroku:${{ secrets.HEROKU_API_KEY }}@git.heroku.com/${{ secrets.HEROKU_APP_NAME }}.git
@@ -33,17 +33,17 @@ jobs:
 #      run: |
 #        git push heroku HEAD:master -f
     - name: Run ZAP over deployed APP
-      run: docker run -v $GITHUB_WORKSPACE/dist/zap:/zap/wrk/:rw --network=host -t owasp/zap2docker-stable zap-baseline.py -t https://faraday-vmpipelines.herokuapp.com -x zap-report.xml || true
+      run: docker run -v /tmp/dist/zap:/zap/wrk/:rw --network=host -t owasp/zap2docker-stable zap-baseline.py -t https://faraday-vmpipelines.herokuapp.com -x zap-report.xml || true
 
     - name: Check dirs
-      run: ls -al $GITHUB_WORKSPACE/dist/zap
+      run: ls -al /tmp/dist/zap
 #    - name: Upload Bandit Report
 #      uses: actions/upload-artifact@v2
 #      with:
 #        name: bandit-report
-#        path: dist/bandit/bandit-report.html
+#        path: /tmp/dist/bandit/bandit-report.html
     - name: Upload ZAP Report
       uses: actions/upload-artifact@v2
       with:
         name: zap-report
-        path: dist/zap/zap-report.xml
+        path: /tmp/dist/zap/zap-report.xml
