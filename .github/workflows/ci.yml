@@ -43,7 +43,7 @@ jobs:
 
 
   scan:
-    needs: [build]
+#    needs: [build]
     runs-on: ubuntu-latest
 
     container:
