@@ -38,9 +38,9 @@ jobs:
 #      uses: actions/upload-artifact@v2
 #      with:
 #        name: bandit-report
-#        path: $GITHUB_WORKSPACE/dist/bandit/bandit-report.html
+#        path: dist/bandit/bandit-report.html
     - name: Upload ZAP Report
       uses: actions/upload-artifact@v2
       with:
         name: zap-report
-        path: $GITHUB_WORKSPACE/dist/zap/zap-report.xml
+        path: dist/zap/zap-report.xml
