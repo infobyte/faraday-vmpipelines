@@ -36,7 +36,7 @@ jobs:
       run: docker run -v $GITHUB_WORKSPACE/dist/zap:/zap/wrk/:rw --network=host -t owasp/zap2docker-stable zap-baseline.py -t https://faraday-vmpipelines.herokuapp.com -x zap-report.xml || true
 
     - name: Check dirs
-      run: tree -d dist
+      run: ls -al dist/zap
 #    - name: Upload Bandit Report
 #      uses: actions/upload-artifact@v2
 #      with:
