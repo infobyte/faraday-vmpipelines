@@ -6,7 +6,7 @@ on:
       - master
 
 jobs:
-  'Build, Deploy, and Scan':
+  build-deploy-scan:
     runs-on: ubuntu-latest
 #    container:
 #      image: owasp/zap2docker-stable
