@@ -52,7 +52,7 @@ jobs:
 
     steps:
     - name: run zap baseline scan
-      run: zap-baseline.py -t https://faraday-vmpipelines.herokuapp.com -x zap-report.xml || echo 0
+      run: zap-baseline.py -t ${{ secrets.ZAP_SCAN_URL }} -x zap-report.xml || echo 0
 
     - name: Upload Zap Report Artifact
       uses: actions/upload-artifact@v2
@@ -87,12 +87,6 @@ jobs:
         name: zap-report
         path: zap-report
 
-    - name: Check dir (1)
-      run: ls -al
-
-    - name: Check dir (2)
-      run: ls -al zap-report
-
     - name: Upload ZAP Report to Faraday
       run: |
-        python $GITHUB_WORKSPACE/import_scan.py -b ${{ secrets.FARADAY_HOST }} -e ${{ secrets.FARADAY_EMAIL }} -p ${{ secrets.FARADAY_PASSWORD }} -w ${{ github.event.repository.name }}-${{ steps.date.outputs.date }}-${{ github.event.issue.number }} -f zap-report/zap-report.xml
+        python $GITHUB_WORKSPACE/import_scan.py -b ${{ secrets.FARADAY_HOST }} -e ${{ secrets.FARADAY_EMAIL }} -p ${{ secrets.FARADAY_PASSWORD }} -w ${{ github.event.repository.name }}-${{ steps.date.outputs.date }}-${{ github.event.issues.number }} -f zap-report/zap-report.xml
