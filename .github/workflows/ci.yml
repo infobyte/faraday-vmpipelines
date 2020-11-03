@@ -57,4 +57,5 @@ jobs:
 #      - name: run zap baseline scan
 #        run: zap-baseline.py -t https://faraday-vmpipelines.herokuapp.com -x zap-report.xml || echo 0
       - name: Upload ZAP Report to Faraday
-        run: python $GITHUB_WORKSPACE/import_scan.py -b ${{ secrets.FARADAY_HOST }} -e ${{ secrets.FARADAY_EMAIL }} -p ${{ secrets.FARADAY_PASSWORD }} -w xlabs5 -f zap-report.xml
+        run: |
+          python $GITHUB_WORKSPACE/import_scan.py -b ${{ secrets.FARADAY_HOST }} -e ${{ secrets.FARADAY_EMAIL }} -p ${{ secrets.FARADAY_PASSWORD }} -w xlabs5 -f zap-report.xml
