@@ -25,13 +25,13 @@ jobs:
 
 
       - name: Run Bandit (Python code checker)
-        run: bandit -r . -f xml -o vulpy_faraday_bandit.xml || true
+        run: bandit -r . -f xml -o bandit-report.xml || true
 
       - name: Upload Bandit Report
         uses: actions/upload-artifact@v2
         with:
           name: bandit-report
-          path: vulpy_faraday_bandit.xml
+          path: bandit-report.xml
 
 #      - name: Add remote origin
 #        run: |
@@ -96,4 +96,4 @@ jobs:
     - name: Upload Reports to Faraday
       run: |
         python $GITHUB_WORKSPACE/import_scan.py -b ${{ secrets.FARADAY_HOST }} -e ${{ secrets.FARADAY_EMAIL }} -p ${{ secrets.FARADAY_PASSWORD }} -w ${{ github.event.repository.name }}-${{ steps.date.outputs.date }}-${{ github.run_number }} -f zap-report/zap-report.xml
-        python $GITHUB_WORKSPACE/import_scan.py -b ${{ secrets.FARADAY_HOST }} -e ${{ secrets.FARADAY_EMAIL }} -p ${{ secrets.FARADAY_PASSWORD }} -w ${{ github.event.repository.name }}-${{ steps.date.outputs.date }}-${{ github.run_number }} -f bandit-report/vulpy_faraday_bandit.xml
+        python $GITHUB_WORKSPACE/import_scan.py -b ${{ secrets.FARADAY_HOST }} -e ${{ secrets.FARADAY_EMAIL }} -p ${{ secrets.FARADAY_PASSWORD }} -w ${{ github.event.repository.name }}-${{ steps.date.outputs.date }}-${{ github.run_number }} -f bandit-report/bandit-report.xml
