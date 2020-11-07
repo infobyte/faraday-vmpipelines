@@ -88,10 +88,10 @@ jobs:
         path: zap-report
 
     - name: Download Bandit Report Artifact
-        uses: actions/download-artifact@master
-        with:
-          name: bandit-report
-          path: vulpy_faraday_bandit.xml
+      uses: actions/download-artifact@master
+      with:
+        name: bandit-report
+        path: vulpy_faraday_bandit.xml
 
     - name: Upload Reports to Faraday
       run: |
