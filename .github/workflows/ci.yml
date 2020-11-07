@@ -91,7 +91,7 @@ jobs:
       uses: actions/download-artifact@master
       with:
         name: bandit-report
-        path: vulpy_faraday_bandit.xml
+        path: bandit-report
 
     - name: Upload Reports to Faraday
       run: |
