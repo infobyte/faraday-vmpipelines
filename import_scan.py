@@ -3,29 +3,37 @@ import argparse
 
 def _login(session: requests.Session, base_url, email, password):
     print("Login to Faraday")
+
     url = f"{base_url}/_api/login"
     credentials = {"email": email, "password": password}
+
     response = session.post(url, json=credentials)
     response.raise_for_status()
+
     return response
 
 def exists_workspaces(faraday_session, base_url, workspace):
     print(f"Checking if workspace {workspace} exists")
+
     response = faraday_session.get(f"{base_url}/_api/v2/ws/")
     cluster = response.json()
-    return [ws for ws in cluster if ws.get('name', None) == workspace] != []
 
+    return [ws for ws in cluster if ws.get('name', None) == workspace] != []
 
 def create_workspace(faraday_session, base_url, email, workspace):
     print(f"Workspace {workspace} doesn't exists. Creating it")
+
     url = f"{base_url}/_api/v2/ws/"
     body = {"_id": workspace, "name": workspace, "type": "Workspace", "users": [email]}
+
     response = faraday_session.post(url, json=body)
     response.raise_for_status()
+
     return response.json()
 
 def upload_report(faraday_session, base_url, workspace, file_name):
     print(f"Uploading report in workspace {workspace}.")
+
     csrf_url = f"{base_url}/_api/session"
     url = f"{base_url}/_api/v2/ws/{workspace}/upload_report"
     files = {"file": open(file_name, 'r')}
@@ -33,11 +41,15 @@ def upload_report(faraday_session, base_url, workspace, file_name):
     csrf_token = faraday_session.get(csrf_url).json().get('csrf_token')
 
     body = {"csrf_token": csrf_token}
+
     response = faraday_session.post(url, data=body, files=files)
     response.raise_for_status()
+
     return response.json()
 
 def import_scan(base_url, email, password, workspace, file_name):
+    print(f'Importing scan from {file_name}')
+
     faraday_session = requests.Session()
     _login(faraday_session, base_url, email, password)
     ws_exists = exists_workspaces(faraday_session, base_url, workspace)
@@ -45,7 +57,7 @@ def import_scan(base_url, email, password, workspace, file_name):
     if not ws_exists:
         create_workspace(faraday_session, base_url, email, workspace)
 
-    upload_report_response = upload_report(faraday_session, base_url, workspace, file_name)
+    upload_report(faraday_session, base_url, workspace, file_name)
     print('Report uploaded successfully')
 
 
