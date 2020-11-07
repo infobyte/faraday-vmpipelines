@@ -25,21 +25,21 @@ jobs:
 
 
       - name: Run Bandit (Python code checker)
-        run: bandit -r . -f html -o bandit-report.html || true
+        run: bandit -r . -f xml -o vulpy_faraday_bandit.xml || true
 
       - name: Upload Bandit Report
         uses: actions/upload-artifact@v2
         with:
           name: bandit-report
-          path: bandit-report.html
+          path: vulpy_faraday_bandit.xml
 
-      - name: Add remote origin
-        run: |
-          git remote add heroku https://heroku:${{ secrets.HEROKU_API_KEY }}@git.heroku.com/${{ secrets.HEROKU_APP_NAME }}.git
-
-      - name: Deploy to Heroku
-        run: |
-          git push heroku HEAD:master -f
+#      - name: Add remote origin
+#        run: |
+#          git remote add heroku https://heroku:${{ secrets.HEROKU_API_KEY }}@git.heroku.com/${{ secrets.HEROKU_APP_NAME }}.git
+#
+#      - name: Deploy to Heroku
+#        run: |
+#          git push heroku HEAD:master -f
 
 
   scan:
@@ -87,6 +87,13 @@ jobs:
         name: zap-report
         path: zap-report
 
-    - name: Upload ZAP Report to Faraday
+    - name: Download Bandit Report Artifact
+        uses: actions/download-artifact@master
+        with:
+          name: bandit-report
+          path: vulpy_faraday_bandit.xml
+
+    - name: Upload Reports to Faraday
       run: |
         python $GITHUB_WORKSPACE/import_scan.py -b ${{ secrets.FARADAY_HOST }} -e ${{ secrets.FARADAY_EMAIL }} -p ${{ secrets.FARADAY_PASSWORD }} -w ${{ github.event.repository.name }}-${{ steps.date.outputs.date }}-${{ github.run_number }} -f zap-report/zap-report.xml
+        python $GITHUB_WORKSPACE/import_scan.py -b ${{ secrets.FARADAY_HOST }} -e ${{ secrets.FARADAY_EMAIL }} -p ${{ secrets.FARADAY_PASSWORD }} -w ${{ github.event.repository.name }}-${{ steps.date.outputs.date }}-${{ github.run_number }} -f bandit-report/vulpy_faraday_bandit.xml
