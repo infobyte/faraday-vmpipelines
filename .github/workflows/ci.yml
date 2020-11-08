@@ -88,14 +88,4 @@ jobs:
         username: ${{ secrets.FARADAY_USERNAME }}
         password: ${{ secrets.FARADAY_PASSWORD }}
         workspace: ${{ github.event.repository.name }}-${{ steps.date.outputs.date }}-${{ github.run_number }}
-        filename: bandit-report/vulpy_faraday_bandit.xml
-
-
-    - name: Upload Reports to Faraday
-      uses: flopezluksenberg/gha-faraday-report-uploader@main
-      with:
-        host: ${{ secrets.FARADAY_HOST }}
-        username: ${{ secrets.FARADAY_USERNAME }}
-        password: ${{ secrets.FARADAY_PASSWORD }}
-        workspace: ${{ github.event.repository.name }}-${{ steps.date.outputs.date }}-${{ github.run_number }}
-        filename: zap-report/zap-report.xml
+        filename: [bandit-report/vulpy_faraday_bandit.xml, zap-report/zap-report.xml]
