@@ -15,8 +15,8 @@ jobs:
       - name: Use Python
         uses: actions/setup-python@v2
         with:
-          python-version: '3.x' # Version range or exact version of a Python version to use, using SemVer's version range syntax
-          architecture: 'x64' # optional x64 or x86. Defaults to x64 if not specified
+          python-version: '3.x'
+          architecture: 'x64'
 
       - name: Install dependencies
         run: |
@@ -33,70 +33,53 @@ jobs:
           name: bandit-report
           path: vulpy_faraday_bandit.xml
 
-#      - name: Add remote origin
-#        run: |
-#          git remote add heroku https://heroku:${{ secrets.HEROKU_API_KEY }}@git.heroku.com/${{ secrets.HEROKU_APP_NAME }}.git
-#
-#      - name: Deploy to Heroku
-#        run: |
-#          git push heroku HEAD:master -f
+      - name: Add remote origin
+        run: |
+          git remote add heroku https://heroku:${{ secrets.HEROKU_API_KEY }}@git.heroku.com/${{ secrets.HEROKU_APP_NAME }}.git
 
-#
-#  scan:
-#    needs: [build]
-#    runs-on: ubuntu-latest
-#
-#    container:
-#      image: owasp/zap2docker-stable
-#      options: --user root -v ${{ github.workspace }}:/zap/wrk/:rw
-#
-#    steps:
-#    - name: run zap baseline scan
-#      run: zap-baseline.py -t ${{ secrets.ZAP_SCAN_URL }} -x zap-report.xml || echo 0
-#
-#    - name: Upload Zap Report Artifact
-#      uses: actions/upload-artifact@v2
-#      with:
-#        name: zap-report
-#        path: zap-report.xml
+      - name: Deploy to Heroku
+        run: |
+          git push heroku HEAD:master -f
 
-  upload:
-#    needs: [scan]
+
+  scan:
     needs: [build]
     runs-on: ubuntu-latest
 
-    steps:
-#    - uses: actions/checkout@v1
-#    - name: Use Python
-#      uses: actions/setup-python@v2
-#      with:
-#        python-version: '3.x' # Version range or exact version of a Python version to use, using SemVer's version range syntax
-#        architecture: 'x64' # optional x64 or x86. Defaults to x64 if not specified
-#    - name: Install dependencies
-#      run: |
-#        python -m pip install --upgrade pip
-#        pip install -r requirements.txt
+    container:
+      image: owasp/zap2docker-stable
+      options: --user root -v ${{ github.workspace }}:/zap/wrk/:rw
 
+    steps:
+    - name: run zap baseline scan
+      run: zap-baseline.py -t ${{ secrets.ZAP_SCAN_URL }} -x zap-report.xml || echo 0
+
+    - name: Upload Zap Report Artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: zap-report
+        path: zap-report.xml
+
+  upload:
+    needs: [scan]
+    runs-on: ubuntu-latest
+
+    steps:
     - name: Get current date
       id: date
       run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
 
-#    - name: Download Zap Report Artifact
-#      uses: actions/download-artifact@master
-#      with:
-#        name: zap-report
-#        path: zap-report
+    - name: Download Zap Report Artifact
+      uses: actions/download-artifact@master
+      with:
+        name: zap-report
+        path: zap-report
 
     - name: Download Bandit Report Artifact
       uses: actions/download-artifact@master
       with:
         name: bandit-report
         path: bandit-report
-
-#    - name: Upload Reports to Faraday
-#      run: |
-#        python $GITHUB_WORKSPACE/import_scan.py -b ${{ secrets.FARADAY_HOST }} -e ${{ secrets.FARADAY_USERNAME }} -p ${{ secrets.FARADAY_PASSWORD }} -w ${{ github.event.repository.name }}-${{ steps.date.outputs.date }}-${{ github.run_number }} -f zap-report/zap-report.xml
-#        python $GITHUB_WORKSPACE/import_scan.py -b ${{ secrets.FARADAY_HOST }} -e ${{ secrets.FARADAY_USERNAME }} -p ${{ secrets.FARADAY_PASSWORD }} -w ${{ github.event.repository.name }}-${{ steps.date.outputs.date }}-${{ github.run_number }} -f bandit-report/vulpy_faraday_bandit.xml
 
     - name: Upload Reports to Faraday
       uses: flopezluksenberg/gha-faraday-report-uploader@main
@@ -106,3 +89,13 @@ jobs:
         password: ${{ secrets.FARADAY_PASSWORD }}
         workspace: ${{ github.event.repository.name }}-${{ steps.date.outputs.date }}-${{ github.run_number }}
         filename: bandit-report/vulpy_faraday_bandit.xml
+
+
+    - name: Upload Reports to Faraday
+      uses: flopezluksenberg/gha-faraday-report-uploader@main
+      with:
+        host: ${{ secrets.FARADAY_HOST }}
+        username: ${{ secrets.FARADAY_USERNAME }}
+        password: ${{ secrets.FARADAY_PASSWORD }}
+        workspace: ${{ github.event.repository.name }}-${{ steps.date.outputs.date }}-${{ github.run_number }}
+        filename: zap-report/zap-report.xml
