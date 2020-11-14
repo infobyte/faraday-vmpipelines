@@ -12,6 +12,7 @@ jobs:
   include:
   - stage: Deploy
     deploy:
+      script: skip
       provider: heroku
       app: faraday-vmpipelines
       api_key:
