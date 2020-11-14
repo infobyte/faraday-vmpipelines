@@ -1,20 +1,18 @@
 language: python
 cache: pip
 python:
-- '3.8'
-install:
-- pip install -r requirements.txt
+  - '3.8'
 stages:
-- Deploy
+  - Deploy
 jobs:
   include:
-  - stage: Deploy
-    deploy:
-      provider: heroku
-      api_key:
-        secure: OwhlpqT5/vwM+D3waAKMr7QL3snRwdZi1Iwqx2/tlF8aZfV9/JExpMmaaoQxXsvUOJcdph3c9PKS+soHijcIrN+qrUbeBwgLQIWeAlOTYEJC/kAI0/CublN2XxkxRYC7X9B2rd4FlKqKspuEpbxEYkaarX8NF1ER1EVFqnPVTGJvdpRcPW5iyjs197M37YAJSTZwM7oNxPDclDvoZ6g0MnsFICmPhwRuCVYFiurhxNMd5KhWUMWMAd6v7YxMlMyWEArFD1Ucu6NsZivd2VZVwvSW9kGVuea1YXAXCPILdqOEeITYMotpY68nESWPaGGlNVRgTjVZR+mOSnn1epRiUUit696ekB8nex9Uj+XdiodpvycCXJaeq1QqQBWA923JHcLGJ8No9eNNi6DyRlZXHyhk+owwuSkHIz1BgwGAK6Xa9AfAWWBbBErLrAssv6ZUKwi2E+CTvRqJhH/Ed1qgXF1NagmyWd3T02tM1wifp7iak3NrqGXsg7NbkNACH427/YMwzqW22P316IQSrF8UFsEfMdNSt+bs5K7V5+WFe8Fy/twvG8XuV1F8kfio1BV6pO5OMiYgA/xBvy0Ve87vLUgGmKm7OhwO+w+0Y+496pvyoRlDPfIUc9d3dQPeHjO68WZDw51OrQR0N6gGfdhpu0WwZIGL3WoGgERXStFS5vM=
-      app: faraday-vmpipelines
-      on:
-        repo: flopezluksenberg/faraday-vmpipelines
-        branch: travis
-      skip_cleanup: 'true'
+    - stage: Deploy
+      deploy:
+        provider: heroku
+        api_key:
+          secure: OwhlpqT5/vwM+D3waAKMr7QL3snRwdZi1Iwqx2/tlF8aZfV9/JExpMmaaoQxXsvUOJcdph3c9PKS+soHijcIrN+qrUbeBwgLQIWeAlOTYEJC/kAI0/CublN2XxkxRYC7X9B2rd4FlKqKspuEpbxEYkaarX8NF1ER1EVFqnPVTGJvdpRcPW5iyjs197M37YAJSTZwM7oNxPDclDvoZ6g0MnsFICmPhwRuCVYFiurhxNMd5KhWUMWMAd6v7YxMlMyWEArFD1Ucu6NsZivd2VZVwvSW9kGVuea1YXAXCPILdqOEeITYMotpY68nESWPaGGlNVRgTjVZR+mOSnn1epRiUUit696ekB8nex9Uj+XdiodpvycCXJaeq1QqQBWA923JHcLGJ8No9eNNi6DyRlZXHyhk+owwuSkHIz1BgwGAK6Xa9AfAWWBbBErLrAssv6ZUKwi2E+CTvRqJhH/Ed1qgXF1NagmyWd3T02tM1wifp7iak3NrqGXsg7NbkNACH427/YMwzqW22P316IQSrF8UFsEfMdNSt+bs5K7V5+WFe8Fy/twvG8XuV1F8kfio1BV6pO5OMiYgA/xBvy0Ve87vLUgGmKm7OhwO+w+0Y+496pvyoRlDPfIUc9d3dQPeHjO68WZDw51OrQR0N6gGfdhpu0WwZIGL3WoGgERXStFS5vM=
+        app: faraday-vmpipelines
+        on:
+          repo: flopezluksenberg/faraday-vmpipelines
+          branch: travis
+        skip_cleanup: 'true'
