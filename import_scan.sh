@@ -21,7 +21,7 @@ then
 fi
 
 echo "Authenticating in Faraday"
-faraday-cli auth --url $FARADAY_HOST --user $FARADAY_USERNAME --password $FARADAY_PASSWORD
+echo "N" | faraday-cli auth --url $FARADAY_HOST --user $FARADAY_USERNAME --password $FARADAY_PASSWORD
 
 echo "Creating workspace $FARADAY_WORKSPACE if it doesn't exists"
 faraday-cli workspace -a create -n $FARADAY_WORKSPACE > /dev/null
