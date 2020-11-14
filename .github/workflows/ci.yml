@@ -61,7 +61,8 @@ jobs:
 #        path: zap-report.xml
 
   upload:
-    needs: [scan]
+#    needs: [scan]
+    needs: [build]
     runs-on: ubuntu-latest
 
     steps:
