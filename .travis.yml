@@ -1,7 +1,22 @@
 language: python
 cache: pip
 python:
-  - "3.8"
+- '3.8'
 install:
-  - pip install -r requirements.txt
-script: bandit -r . -f xml -o vulpy_faraday_bandit.xml || true
+- pip install -r requirements.txt
+stages:
+- Deploy
+- Scan
+- Upload
+jobs:
+  include:
+  - stage: Deploy
+    deploy:
+      provider: heroku
+      app: faraday-vmpipelines
+      api_key:
+        secure: phOqEbbugrnp4regyhNXsIePNwfeD0mHNkzkWo8TZ4F6VtQfpKLjN3cW9SER1rF7x160k+whM08dsfKIe+1jY+RxgGpXqQwhkNDLqvpkdS4t7G6Ay+9LHeF0yYfNpMgx9QaJldOZFkstsqGQMOTiaWgEMikvnuVKrE6kja5LLUcO7kTAQUaxSFEi+jaQiPu81GGaS4foTLISGUeFpYZS4JCoaG1n+NUun++o9ZBW2++iOHGCVHE6nhQZhYADUl4wQ3PRol8pA41weQvX1Xx4JfDmej4XnGuMjCRV4aPGgompLoPkoIJ7ic62Gs0qHPa8S0ZwAlHLPRlIqS+XF631DlWszyI693Qnw8tAICxS9V0OVaujB1cLiDKo/uT0DkADNX7jvb0CQlItkpw7MWaTK2P5KIQ/tzyeKDXAEQECAALJXElgMaAIsR3vBa0/Xxz52A9wiQ821SpajLq+etUoMwygy3QYZt/3sl/ZI3iz/B6b6n0/bbERjX3jI7A3MS4wPKsHW/rt7XH0sXPCRETbw7bL3gKB7G6x4Kr/7TO684KPVnNUcfSx9gLa+41EFv0ofcb8jBzYt5Iozee17SuAg6nQ7yaPD/pmyOlvqF8VF3CtN18DTStMT/YQRSWYYf86HC7lwm5aJ7YjEO3+dvUXnIZIODnIp2FZ5I8nR0hQK2E=
+  - stage: Scan
+    script: bandit -r . -f xml -o vulpy_faraday_bandit.xml || true
+#  - stage: Upload
+#    script: bandit -r . -f xml -o vulpy_faraday_bandit.xml || true
