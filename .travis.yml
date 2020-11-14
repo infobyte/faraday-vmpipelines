@@ -6,8 +6,6 @@ install:
 - pip install -r requirements.txt
 stages:
 - Deploy
-- Scan
-- Upload
 jobs:
   include:
   - stage: Deploy
