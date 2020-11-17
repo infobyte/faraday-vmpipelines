@@ -81,21 +81,11 @@ jobs:
         name: bandit-report
         path: bandit-report
 
-    - name: Upload Bandit Report to Faraday
-      uses: infobyte/gha-faraday-report-uploader@legacy
+    - name: Upload Reports to Faraday
+      uses: infobyte/gha-faraday-report-uploader@main
       with:
         host: ${{ secrets.FARADAY_HOST }}
         username: ${{ secrets.FARADAY_USERNAME }}
         password: ${{ secrets.FARADAY_PASSWORD }}
         workspace: ${{ github.event.repository.name }}-${{ steps.date.outputs.date }}-${{ github.run_number }}
-        files: bandit-report/vulpy_faraday_bandit.xml
-
-
-    - name: Upload Zap Report to Faraday
-      uses: infobyte/gha-faraday-report-uploader@legacy
-      with:
-        host: ${{ secrets.FARADAY_HOST }}
-        username: ${{ secrets.FARADAY_USERNAME }}
-        password: ${{ secrets.FARADAY_PASSWORD }}
-        workspace: ${{ github.event.repository.name }}-${{ steps.date.outputs.date }}-${{ github.run_number }}
-        files: zap-report/zap-report.xml
+        files: bandit-report/vulpy_faraday_bandit.xml zap-report/zap-report.xml
