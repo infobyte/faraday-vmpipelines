@@ -88,4 +88,4 @@ jobs:
         username: ${{ secrets.FARADAY_USERNAME }}
         password: ${{ secrets.FARADAY_PASSWORD }}
         workspace: ${{ github.event.repository.name }}-${{ steps.date.outputs.date }}-${{ github.run_number }}
-        files: bandit-report/vulpy_faraday_bandit.xml zap-report/zap-report.xml
+        files: bandit-report/vulpy_faraday_bandit.xml,zap-report/zap-report.xml
