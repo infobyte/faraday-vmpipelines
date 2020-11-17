@@ -81,7 +81,6 @@ jobs:
         name: bandit-report
         path: bandit-report
 
-
     - name: Upload Reports to Faraday
       uses: infobyte/gha-faraday-report-uploader@legacy
       with:
