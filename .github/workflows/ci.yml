@@ -82,7 +82,7 @@ jobs:
         path: bandit-report
 
     - name: Upload Reports to Faraday
-      uses: flopezluksenberg/gha-faraday-report-uploader@main
+      uses: infobyte/gha-faraday-report-uploader@main
       with:
         host: ${{ secrets.FARADAY_HOST }}
         username: ${{ secrets.FARADAY_USERNAME }}
