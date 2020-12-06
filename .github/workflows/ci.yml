@@ -26,13 +26,13 @@ jobs:
 
 
       - name: Run Bandit (Python code checker)
-        run: bandit -r . -f xml -o vulpy_faraday_bandit.xml || true
+        run: bandit -r . -f xml -o flaskapp_faraday_bandit.xml || true
 
       - name: Upload Bandit Report
         uses: actions/upload-artifact@v2
         with:
           name: bandit-report
-          path: vulpy_faraday_bandit.xml
+          path: flaskapp_faraday_bandit.xml
 
       - name: Add remote origin
         run: |
@@ -89,4 +89,4 @@ jobs:
         username: ${{ secrets.FARADAY_USERNAME }}
         password: ${{ secrets.FARADAY_PASSWORD }}
         workspace: ${{ github.event.repository.name }}-${{ steps.date.outputs.date }}-${{ github.run_number }}
-        files: bandit-report/vulpy_faraday_bandit.xml zap-report/zap-report.xml
+        files: bandit-report/flaskapp_faraday_bandit.xml zap-report/zap-report.xml
