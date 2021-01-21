@@ -64,7 +64,7 @@ jobs:
     runs-on: ubuntu-latest
 
     container:
-      image: python-latest
+      image: python:3.9.1
 
     steps:
     - name: Get current date
