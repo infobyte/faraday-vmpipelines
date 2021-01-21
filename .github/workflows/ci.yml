@@ -68,17 +68,17 @@ jobs:
       id: date
       run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
 
-    - name: Download Zap Report Artifact
-      uses: actions/download-artifact@master
-      with:
-        name: zap-report
-        path: zap-report
-
-    - name: Download Bandit Report Artifact
-      uses: actions/download-artifact@master
-      with:
-        name: bandit-report
-        path: bandit-report
+#    - name: Download Zap Report Artifact
+#      uses: actions/download-artifact@master
+#      with:
+#        name: zap-report
+#        path: zap-report
+#
+#    - name: Download Bandit Report Artifact
+#      uses: actions/download-artifact@master
+#      with:
+#        name: bandit-report
+#        path: bandit-report
 
 #     Faraday CLI approach
     - name: Upload Reports to Faraday
