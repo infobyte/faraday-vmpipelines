@@ -65,11 +65,25 @@ jobs:
 
     container:
       image: python:3.9.1
+      options: --user root -v ${{ github.workspace }}:/reports/:rw
 
     steps:
     - name: Get current date
       id: date
       run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
+
+    - name: Mocking reports1
+      run: mkdir reports
+
+    - name: Mocking reports2
+      run: touch reports/flaskapp_faraday_bandit.xml
+
+    - name: Mocking reports3
+      run: touch reports/zap_report.xml
+
+    - name: Mocking reports4
+      run: ls -al reports
+
 
 #    - name: Download Zap Report Artifact
 #      uses: actions/download-artifact@master
@@ -89,8 +103,8 @@ jobs:
         pip install faraday-cli
         faraday-cli auth -f ${{ secrets.FARADAY_HOST }} -u ${{ secrets.FARADAY_USERNAME }} -p ${{ secrets.FARADAY_PASSWORD }}
         faraday-cli create_ws ${{ github.event.repository.name }}-${{ steps.date.outputs.date }}-${{ github.run_number }}
-        faraday-cli process_report -w ${{ github.event.repository.name }}-${{ steps.date.outputs.date }}-${{ github.run_number }} bandit-report/flaskapp_faraday_bandit.xml
-        faraday-cli process_report -w ${{ github.event.repository.name }}-${{ steps.date.outputs.date }}-${{ github.run_number }} bandit-report/zap-report.xml
+        faraday-cli process_report -w ${{ github.event.repository.name }}-${{ steps.date.outputs.date }}-${{ github.run_number }} reports/flaskapp_faraday_bandit.xml
+        faraday-cli process_report -w ${{ github.event.repository.name }}-${{ steps.date.outputs.date }}-${{ github.run_number }} reports/zap-report.xml
 
 #     Custom GHA approach
 #    - name: Upload Reports to Faraday
