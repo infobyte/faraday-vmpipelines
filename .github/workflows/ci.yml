@@ -84,11 +84,11 @@ jobs:
     - name: Upload Reports to Faraday
       run: |
         python -m pip install --upgrade pip
-        pip3 install faraday-cli
-        faraday-cli --auth -f ${{ secrets.FARADAY_HOST }} -u ${{ secrets.FARADAY_USERNAME }} -p ${{ secrets.FARADAY_PASSWORD }}
-        faraday-cli create_ws ${{ github.event.repository.name }}-${{ steps.date.outputs.date }}-${{ github.run_number }}
-        faraday-cli process_report -w ${{ github.event.repository.name }}-${{ steps.date.outputs.date }}-${{ github.run_number }} bandit-report/flaskapp_faraday_bandit.xml
-        faraday-cli process_report -w ${{ github.event.repository.name }}-${{ steps.date.outputs.date }}-${{ github.run_number }} bandit-report/zap-report.xml
+        pip install faraday-cli
+#        faraday-cli --auth -f ${{ secrets.FARADAY_HOST }} -u ${{ secrets.FARADAY_USERNAME }} -p ${{ secrets.FARADAY_PASSWORD }}
+#        faraday-cli create_ws ${{ github.event.repository.name }}-${{ steps.date.outputs.date }}-${{ github.run_number }}
+#        faraday-cli process_report -w ${{ github.event.repository.name }}-${{ steps.date.outputs.date }}-${{ github.run_number }} bandit-report/flaskapp_faraday_bandit.xml
+#        faraday-cli process_report -w ${{ github.event.repository.name }}-${{ steps.date.outputs.date }}-${{ github.run_number }} bandit-report/zap-report.xml
 
 #     Custom GHA approach
 #    - name: Upload Reports to Faraday
