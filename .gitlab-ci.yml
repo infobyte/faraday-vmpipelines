@@ -1,0 +1,66 @@
+image: docker:latest
+
+services:
+  - docker:dind
+
+stages:
+  - build
+  - deploy
+  - test
+  - upload
+
+variables:
+  MOUNT_POINT: /builds/$CI_PROJECT_PATH/output
+
+build:
+  stage: build
+  script:
+    - apk update
+    - apk upgrade
+    - apk add curl jq python3 python3-dev build-base libffi-dev libressl-dev gettext
+    - curl -O https://bootstrap.pypa.io/get-pip.py
+    - python3 get-pip.py
+    - python3 -V  # Print out python version for debugging
+    - pip install virtualenv
+    - virtualenv venv
+    - source venv/bin/activate
+    - pip install -r requirements.txt
+    - mkdir -p $MOUNT_POINT
+    - bandit -r $CI_PROJECT_PATH -f xml -o $MOUNT_POINT/flaskapp_faraday_bandit.xml --exit-zero
+    - docker run --rm -e SONAR_HOST_URL=$SONARQUBE_URL -e SONAR_LOGIN=$SONARQUBE_TOKEN -v /builds/$CI_PROJECT_PATH:/usr/src sonarsource/sonar-scanner-cli -Dsonar.organization=$SONARQUBE_ORGANIZATION -Dsonar.projectKey=$SONARQUBE_PROJECT
+
+  artifacts:
+    paths:
+      - $MOUNT_POINT/flaskapp_faraday_bandit.xml
+
+deploy:
+  stage: deploy
+  script:
+    - apk update
+    - apk upgrade
+    - apk add git
+    - git remote rm heroku || true
+    - git remote add heroku https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME.git > /dev/null
+    - git push heroku HEAD:master -f
+
+vuln-checking:
+  stage: test
+  script:
+    - docker pull owasp/zap2docker-stable
+    - docker run -u root -v $MOUNT_POINT:/zap/wrk/:rw --network=host -t owasp/zap2docker-stable zap-baseline.py -t $ZAP_SCAN_URL -x flaskapp_faraday_zap.xml || true
+  artifacts:
+    paths:
+      - $MOUNT_POINT/flaskapp_faraday_zap.xml
+
+upload-results:
+  stage: upload
+  script:
+    - apk update
+    - apk upgrade
+    - apk add git curl
+    - curl -u "$SONARQUBE_TOKEN:"  $SONARQUBE_URL/api/issues/search\?componentKeys\=$SONARQUBE_PROJECT\&types\=VULNERABILITY\&p\=1\&ps\=500 > $MOUNT_POINT/flaskapp_faraday_sonarqube.json # ATTENTION: You should iterate if total < 500 (page size)
+    - docker build https://github.com/flopezluksenberg/docker-faraday-report-uploader.git -t faraday-uploader
+    - export CURRENT_DATE=$(date +'%Y-%m-%d')
+    - docker run --name faraday-uploader --rm -v $MOUNT_POINT:$MOUNT_POINT -e HOST=$FARADAY_URL -e USERNAME=$FARADAY_USERNAME -e PASSWORD=$FARADAY_PASSWORD -e WORKSPACE=$CI_PROJECT_NAME-$CURRENT_DATE-$CI_COMMIT_SHORT_SHA -e FILES=$MOUNT_POINT/flaskapp_faraday_sonarqube.json faraday-uploader
+    - docker run --name faraday-uploader --rm -v $MOUNT_POINT:$MOUNT_POINT -e HOST=$FARADAY_URL -e USERNAME=$FARADAY_USERNAME -e PASSWORD=$FARADAY_PASSWORD -e WORKSPACE=$CI_PROJECT_NAME-$CURRENT_DATE-$CI_COMMIT_SHORT_SHA -e FILES=$MOUNT_POINT/flaskapp_faraday_zap.xml faraday-uploader
+    - docker run --name faraday-uploader --rm -v $MOUNT_POINT:$MOUNT_POINT -e HOST=$FARADAY_URL -e USERNAME=$FARADAY_USERNAME -e PASSWORD=$FARADAY_PASSWORD -e WORKSPACE=$CI_PROJECT_NAME-$CURRENT_DATE-$CI_COMMIT_SHORT_SHA -e FILES=$MOUNT_POINT/flaskapp_faraday_bandit.xml faraday-uploader
