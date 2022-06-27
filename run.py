@@ -9,7 +9,7 @@ from setup.file import fileaccess
 from setup.execution import execute
 
 APP = Flask(__name__)
-APP.secret_key = 'someSecrets'
+APP.secret_key = 'someSecret'
 
 
 #**************
